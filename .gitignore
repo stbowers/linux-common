@@ -1,0 +1,10 @@
+*
+!.gitignore
+!.bashrc
+!.profile
+!.xinitrc
+!.config
+!.config/*
+!scripts
+!scripts/*
+
