@@ -3,6 +3,7 @@
 !.bashrc
 !.profile
 !.xinitrc
+!.Xresources
 !.config
 !.config/*
 !scripts
