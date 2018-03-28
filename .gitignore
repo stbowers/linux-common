@@ -1,6 +1,6 @@
 *
 !.gitignore
-!.bashrc
+!.zshrc
 !.profile
 !.xinitrc
 !.Xresources
@@ -9,3 +9,8 @@
 !scripts
 !scripts/*
 
+!.nvimrc
+!.nvim
+!.nvim/*
+!.local/share/nvim
+!.local/share/nvim/*

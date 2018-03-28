@@ -1,0 +1,1 @@
+/home/bowers/.config/nvim/init.vim
