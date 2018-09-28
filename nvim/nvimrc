@@ -1,0 +1,142 @@
+" Load plugin directory
+call plug#begin('~/.nvim/user-plugins')
+
+" Load plugins
+" see https://github.com/junegunn/vim-plug readme file for examples
+
+" Plugins
+Plug 'vim-airline/vim-airline'
+Plug 'Valloric/YouCompleteMe'
+Plug 'neomake/neomake'
+Plug 'sakhnik/nvim-gdb'
+Plug 'triglav/vim-visual-increment'
+
+" Initialize plugin system
+call plug#end()
+
+" nvim settings
+
+" Enable mouse
+set mouse=a
+
+" Save and load views for files (makes folds persistant)
+autocmd BufWinLeave *.* mkview
+autocmd BufWinEnter *.* silent loadview
+
+" File and Window Management 
+inoremap <leader>w <Esc>:w<CR>
+nnoremap <leader>w :w<CR>
+
+inoremap <leader>q <ESC>:q<CR>
+nnoremap <leader>q :q<CR>
+
+inoremap <leader>x <ESC>:x<CR>
+nnoremap <leader>x :x<CR>
+
+nnoremap <leader>e :Ex<CR>
+nnoremap <leader>t :tabnew<CR>:Ex<CR>
+nnoremap <leader>v :vsplit<CR>:w<CR>:Ex<CR>
+nnoremap <leader>s :split<CR>:w<CR>:Ex<CR>
+
+" Movement
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+nnoremap <leader>h gT
+nnoremap <leader>l gt
+
+" Enable cut and paste from x clipboard
+function! ClipboardYank()
+  call system('xclip -i -selection clipboard', @@)
+endfunction
+function! ClipboardPaste()
+  let @@ = system('xclip -o -selection clipboard')
+endfunction
+
+vnoremap <silent> y y:call ClipboardYank()<cr>
+vnoremap <silent> d d:call ClipboardYank()<cr>
+nnoremap <silent> p :call ClipboardPaste()<cr>p
+
+" Enable syntax highlighting
+syntax on
+
+" Setup line numbers - relative numbering and colors
+set number
+set relativenumber
+:highlight LineNr term=NONE cterm=NONE ctermfg=Blue ctermbg=Grey
+:highlight CursorLineNr term=NONE cterm=NONE ctermfg=Red ctermbg=Grey
+
+" Highlight current line
+set cursorline
+:highlight CursorLine term=NONE cterm=NONE ctermbg=Black
+
+" Don't wrap lines
+set nowrap
+
+" Always display status line
+set laststatus=2
+
+" Use dark color theme
+set background=dark
+
+" Setup powerline fonts
+let g:airline_powerline_fonts=1
+
+" Setup correct tab behaviour
+" 1 tab = 4 spaces, always enter spaces when pressing the tab key
+set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
+
+" YouCompleteMe Settings
+" Set a golbal ycm_extra_conf file to fall back on if none is found in the
+" project directory
+let g:ycm_global_ycm_extra_conf = '~/.nvim/ycm_global_conf.py'
+
+" Neomake Settings
+
+" Rename file tabs to show tab number and open splits
+" (Based on http://stackoverflow.com/questions/5927952/whats-implementation-of-vims-default-tabline-function)
+if exists("+showtabline")
+    function! MyTabLine()
+        let s = ''
+        let wn = ''
+        let t = tabpagenr()
+        let i = 1
+        while i <= tabpagenr('$')
+            let buflist = tabpagebuflist(i)
+            let winnr = tabpagewinnr(i)
+            let s .= '%' . i . 'T'
+            let s .= (i == t ? '%1*' : '%2*')
+            let s .= ' '
+            let wn = tabpagewinnr(i,'$')
+
+            let s .= '%#TabNum#'
+            let s .= i
+            let s .= '[' . len(buflist) . ']'
+            " let s .= '%*'
+            let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
+            let bufnr = buflist[winnr - 1]
+            let file = bufname(bufnr)
+            let buftype = getbufvar(bufnr, 'buftype')
+            if buftype == 'nofile'
+                if file =~ '\/.'
+                    let file = substitute(file, '.*\/\ze.', '', '')
+                endif
+            else
+                let file = fnamemodify(file, ':p:t')
+            endif
+            if file == ''
+                let file = '[No Name]'
+            endif
+            let s .= ' ' . file . ' '
+            let i = i + 1
+        endwhile
+        let s .= '%T%#TabLineFill#%='
+        let s .= (tabpagenr('$') > 1 ? '%999XX' : 'X')
+        return s
+    endfunction
+    set stal=2
+    set tabline=%!MyTabLine()
+    set showtabline=2
+    highlight link TabNum Special
+endif
