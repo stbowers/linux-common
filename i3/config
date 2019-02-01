@@ -256,9 +256,9 @@ bar {
 set $mode_display display settings: (1) [Primary:eDP1] (2) [Primary:eDP1][Secondary:HDMI1] (3) [Primary:eDP1][Mirror:HDMI1]
 mode "$mode_display" {
     # Display mode switches
-    bindsym 1 exec ~/scripts/i3/displays/peDP1.sh
-    bindsym 2 exec ~/scripts/i3/displays/peDP1sHDMI1.sh
-    bindsym 3 exec ~/scripts/i3/displays/peDP1mHDMI1.sh
+    bindsym 1 exec ~/dotfiles/scripts/i3/displays/peDP1.sh
+    bindsym 2 exec ~/dotfiles/scripts/i3/displays/peDP1sHDMI2.sh
+    bindsym 3 exec ~/dotfiles/scripts/i3/displays/peDP1mHDMI2.sh
 
     # back to normal: Enter or Escape
     bindsym Return mode "default"
