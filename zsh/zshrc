@@ -12,7 +12,7 @@ compinit
 # End of lines added by compinstall
 
 # Add home bin dir to path
-export PATH=$PATH:/home/bowers/bin
+export PATH=$PATH:~/bin
 
 # Terminal is urxvt
 export TERM=rxvt-unicode-256color
