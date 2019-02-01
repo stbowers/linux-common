@@ -19,10 +19,6 @@ call plug#end()
 " Enable mouse
 set mouse=a
 
-" Save and load views for files (makes folds persistant)
-autocmd BufWinLeave *.* mkview
-autocmd BufWinEnter *.* silent loadview
-
 " File and Window Management 
 inoremap <leader>w <Esc>:w<CR>
 nnoremap <leader>w :w<CR>
@@ -91,6 +87,10 @@ set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
 " Set a golbal ycm_extra_conf file to fall back on if none is found in the
 " project directory
 let g:ycm_global_ycm_extra_conf = '~/.nvim/ycm_global_conf.py'
+
+" Auto-compile LaTeX on save
+autocmd BufWritePost *.tex !pdflatex <afile>
+autocmd FileType tex set spell
 
 " Neomake Settings
 
