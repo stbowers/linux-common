@@ -12,7 +12,7 @@ compinit
 # End of lines added by compinstall
 
 # Add home bin dir to path
-export PATH=$PATH:~/bin
+export PATH=$PATH:~/bin:/opt/cross-sh/bin
 
 # Terminal is urxvt
 export TERM=rxvt-unicode-256color
@@ -22,14 +22,30 @@ export VISUAL="open_nvim"
 export EDITOR="$VISUAL"
 
 # Set prompt
-autoload -U colors && colors
-export PROMPT="%{$fg[white]%}[%(!.%{$fg[red]%}.%{$fg[cyan]%})%n%{$fg[white]%}@%{$fg[green]%}%m%{$fg[white]%}:%~]%(!.%{$fg[red]%}.%{$fg[cyan]%})%(!.!>.>) %{$fg[white]%}"
+source ~/dotfiles/scripts/powerline-prompt.sh
+
+# Auto suggestions
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # alias commands
 alias vim=nvim
+alias ls="ls --color=auto"
+alias ll="ls -la"
+alias l.="ls -d .*"
 
 # python virtualenv
 export WORKON_HOME=~/.virtualenvs
 source /usr/bin/virtualenvwrapper.sh
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2.7
 export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv2
+
+# RVM
+source /home/bowers/.rvm/scripts/rvm
+
+# SSH agent (gpg)
+unset SSH_AGENT_PID
+if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+  export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+fi
+export GPG_TTY=$(tty)
+gpg-connect-agent updatestartuptty /bye >/dev/null
