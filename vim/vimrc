@@ -18,13 +18,9 @@ nnoremap <leader>t :tabnew<CR>:Ex<CR>
 nnoremap <leader>v :vsplit<CR>:w<CR>:Ex<CR>
 nnoremap <leader>s :split<CR>:w<CR>:Ex<CR>
 
-" Movement
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
-nnoremap <leader>h gT
-nnoremap <leader>l gt
+" Tab Movement
+nnoremap <C-h> :tabprevious<CR>                                                                            
+nnoremap <C-l> :tabnext<CR>
 
 " Enable cut and paste from x clipboard
 function! ClipboardYank()
@@ -58,7 +54,7 @@ set nowrap
 set laststatus=2
 
 " Use dark color theme
-set background=dark
+color murphy
 
 " Setup powerline fonts
 let g:airline_powerline_fonts=1
