@@ -21,6 +21,8 @@ nnoremap <leader>s :split<CR>:w<CR>:Ex<CR>
 " Tab Movement
 nnoremap <C-h> :tabprevious<CR>                                                                            
 nnoremap <C-l> :tabnext<CR>
+nnoremap <C-k> :tabm +1<CR>
+nnoremap <C-j> :tabm -1<CR>
 
 " Enable cut and paste from x clipboard
 function! ClipboardYank()
@@ -53,8 +55,9 @@ set nowrap
 " Always display status line
 set laststatus=2
 
-" Use dark color theme
-color murphy
+" Color theme
+set background=dark
+color evening
 
 " Setup powerline fonts
 let g:airline_powerline_fonts=1
