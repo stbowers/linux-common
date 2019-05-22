@@ -55,6 +55,9 @@ set nowrap
 " Always display status line
 set laststatus=2
 
+" Set up status line
+
+
 " Color theme
 set background=dark
 color evening
@@ -76,46 +79,111 @@ let g:ycm_global_ycm_extra_conf = '~/.nvim/ycm_global_conf.py'
 " Rename file tabs to show tab number and open splits
 " (Based on http://stackoverflow.com/questions/5927952/whats-implementation-of-vims-default-tabline-function)
 if exists("+showtabline")
-    function! MyTabLine()
-        let s = ''
-        let wn = ''
-        let t = tabpagenr()
-        let i = 1
-        while i <= tabpagenr('$')
-            let buflist = tabpagebuflist(i)
-            let winnr = tabpagewinnr(i)
-            let s .= '%' . i . 'T'
-            let s .= (i == t ? '%1*' : '%2*')
-            let s .= ' '
-            let wn = tabpagewinnr(i,'$')
+    function! TabLine()
+        let tab_line = '%#TabLineFill#' . repeat(' ', &numberwidth)
 
-            let s .= '%#TabNum#'
-            let s .= i
-            let s .= '[' . len(buflist) . ']'
-            " let s .= '%*'
-            let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
+        let current_tab = 1
+        let active_tab = tabpagenr()
+        let total_tabs = tabpagenr('$')
+
+        while current_tab <= total_tabs
+            let tab = ''
+            if current_tab == active_tab
+                let tab .= '%#TabLineSel#'
+            else
+                let tab .= '%#TabLineFill#'
+            endif
+
+            let buflist = tabpagebuflist(current_tab)
+            let winnr = tabpagewinnr(current_tab)
             let bufnr = buflist[winnr - 1]
             let file = bufname(bufnr)
-            let buftype = getbufvar(bufnr, 'buftype')
-            if buftype == 'nofile'
-                if file =~ '\/.'
-                    let file = substitute(file, '.*\/\ze.', '', '')
-                endif
-            else
-                let file = fnamemodify(file, ':p:t')
-            endif
-            if file == ''
-                let file = '[No Name]'
-            endif
-            let s .= ' ' . file . ' '
-            let i = i + 1
+            let bufmodified = getbufvar(bufnr, '&mod')
+
+            let tab .= printf('%d:%s%s', current_tab, (file == '' ? '[No Name]' : file), (bufmodified ? '*' : ''))
+            let tab .= printf(' %%%dX[X]%%X', current_tab)
+
+            let tab_line .= printf('%%%dT%s%%#TabLineSel#|', current_tab, tab)
+
+            let current_tab += 1
         endwhile
-        let s .= '%T%#TabLineFill#%='
-        let s .= (tabpagenr('$') > 1 ? '%999XX' : 'X')
-        return s
+
+        let tab_line .= '%T%#TabLineFill#%='
+        return tab_line
     endfunction
     set stal=2
-    set tabline=%!MyTabLine()
+    set tabline=%!TabLine()
     set showtabline=2
     highlight link TabNum Special
 endif
+
+" =====[ Status Line ]=====
+
+" 256-color terminal colors: https://jonasjacek.github.io/colors/
+" colors: <mode>: [[<default_color_fg>, <default_color_bg>], [<modified_default_fg>, <bg>], [<bright_color>, <bg>], [<dim_color>, <bg>]]
+let s:statusline_options = {
+\   'colors': {
+\       'n': [['15', '238'], ['15', '89'], ['0', '3'], ['15', '240']],
+\       'i': [['15', '18'], ['15', '18'], ['0', '33'], ['15', '240']],
+\       'R': [['15', '18'], ['15', '18'], ['0', '33'], ['15', '240']],
+\       'v': [['0', '3'], ['0', '3'], ['0', '172'], ['15', '240']],
+\       'V': [['0', '3'], ['0', '3'], ['0', '172'], ['15', '240']],
+\       '': [['0', '3'], ['0', '3'], ['0', '172'], ['15', '240']],
+\       'c': [['15', '238'], ['15', '89'], ['0', '160'], ['15', '240']]
+\   },
+\
+\   'mode_map': {
+\       'n'  : 'NORMAL',
+\       'i'  : 'INSERT',
+\       'R'  : 'REPLACE',
+\       'v'  : 'VISUAL',
+\       'V'  : 'V-LINE',
+\       '' : 'V-BLOCK',
+\       'c'  : 'COMMAND',
+\   }
+\}
+
+function! StatusLine()
+    function! SetColors()
+        let colors = get(s:statusline_options.colors, mode(), [['15', '1'], ['0', '9'], ['15', '0']])
+
+        if &mod
+            exec printf('hi StatusLine_Default ctermfg=%s ctermbg=%s', colors[1][0], colors[1][1])
+        else
+            exec printf('hi StatusLine_Default ctermfg=%s ctermbg=%s', colors[0][0], colors[0][1])
+        endif
+
+        exec printf('hi StatusLine_Bright ctermfg=%s ctermbg=%s', colors[2][0], colors[2][1])
+        exec printf('hi StatusLine_Dim ctermfg=%s ctermbg=%s', colors[3][0], colors[3][1])
+	    return '%#StatusLine_Default#'
+    endfunction
+
+    function! StatusLineMode()
+        let editor_mode = mode()
+        return '%#StatusLine_Bright# ' . get(s:statusline_options.mode_map, editor_mode, editor_mode) . ' '
+    endfunction
+
+    function! StatusLineFile()
+        return '%#StatusLine_Default# ' . '%f %r%m%h%w' . ' '
+    endfunction
+
+    function! StatusLineFileType()
+        return '%#StatusLine_Dim# ' . '%y' . ' '
+    endfunction
+
+    function! StatusLineFilePosition()
+        return '%#StatusLine_Bright# ' . '%p%% - %l[%c%V]/%L' . ' '
+    endfunction
+
+    let status_line = SetColors()
+    let status_line .= StatusLineMode()
+    let status_line .= StatusLineFile()
+    let status_line .= '%='
+    let status_line .= StatusLineFileType()
+    let status_line .= StatusLineFilePosition()
+
+    return status_line
+endfunction
+
+set statusline=%!StatusLine()
+" =====

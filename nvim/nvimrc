@@ -8,7 +8,6 @@ call plug#begin('~/.nvim/user-plugins')
 " see https://github.com/junegunn/vim-plug readme file for examples
 
 " Plugins
-Plug 'vim-airline/vim-airline'
 Plug 'Valloric/YouCompleteMe'
 Plug 'neomake/neomake'
 Plug 'sakhnik/nvim-gdb'
