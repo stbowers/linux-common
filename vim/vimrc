@@ -60,7 +60,7 @@ set laststatus=2
 
 " Color theme
 set background=dark
-color evening
+color default
 
 " Setup powerline fonts
 let g:airline_powerline_fonts=1
@@ -103,7 +103,7 @@ if exists("+showtabline")
             let tab .= printf('%d:%s%s', current_tab, (file == '' ? '[No Name]' : file), (bufmodified ? '*' : ''))
             let tab .= printf(' %%%dX[X]%%X', current_tab)
 
-            let tab_line .= printf('%%%dT%s%%#TabLineSel#|', current_tab, tab)
+            let tab_line .= printf('%%%dT%s%%#TabLineSel#', current_tab, tab)
 
             let current_tab += 1
         endwhile
