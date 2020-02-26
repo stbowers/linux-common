@@ -5,6 +5,9 @@ usermodmap=$HOME/.Xmodmap
 sysresources=/etc/X11/xinit/.Xresources
 sysmodmap=/etc/X11/xinit/.Xmodmap
 
+export GDK_SCALE=2
+export GDK_DPI_SCALE=0.5
+
 # merge in defaults and keymaps
 
 if [ -f $sysresources ]; then
@@ -23,8 +26,7 @@ if [ -f "$usermodmap" ]; then
     xmodmap "$usermodmap"
 fi
 
-# start some nice programs
-
+# Run X11 init scripts
 if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
   [ -x "$f" ] && . "$f"
@@ -32,18 +34,5 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 
-# update Xresources
-xrdb -merge ~/.Xresources
-
-# Launch gnome-keyring
-eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
-export SSH_AUTH_SOCK
-
-# Assign caps lock as another escape
-setxkbmap -option caps:escape
-
-# Start xscreensaver
-xscreensaver -no-splash &
-
 # Start window manager
-exec i3
+exec awesome

@@ -1,5 +1,5 @@
 " Load vim-plug
-source ~/common/nvim/plug.vim
+source ~/.config/nvim/plug.vim
 
 " Load plugin directory
 call plug#begin('~/.nvim/user-plugins')
@@ -8,16 +8,25 @@ call plug#begin('~/.nvim/user-plugins')
 " see https://github.com/junegunn/vim-plug readme file for examples
 
 " Plugins
-Plug 'Valloric/YouCompleteMe'
-Plug 'neomake/neomake'
-Plug 'sakhnik/nvim-gdb'
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'triglav/vim-visual-increment'
 Plug 'rust-lang/rust.vim'
 Plug 'preservim/nerdtree'
+
+Plug 'rust-lang/rust.vim'
+
+Plug 'majutsushi/tagbar'
+Plug 'vim-syntastic/syntastic'
+Plug 'ycm-core/YouCompleteMe'
+
+Plug 'sakhnik/nvim-gdb'
+
+Plug 'kien/ctrlp.vim'
 
 " Initialize plugin system
 call plug#end()
 
 " load vim settings
-source ~/common/vim/vimrc
+source ~/.vimrc
 

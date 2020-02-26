@@ -22,7 +22,7 @@ set $down j
 set $mod Mod4
 
 # Commands
-set $term sakura
+set $term alacritty
 
 # Colors
 set $color_main             #000000C0
@@ -50,7 +50,12 @@ set $work10 "10:  "
 # ***** Settings ***************************************************************************************************************************************************************
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
+<<<<<<< HEAD
 font pango:System San Francisco Display 10, pango:Font Awesome Regular 10
+=======
+# font pango:System San Francisco Display 10
+font pango:System San Francisco Display 10, Font Awesome 10
+>>>>>>> 273005ab5e25f7680ea3b0ff1172dab76b0249a3
 
 # Remove window boarders
 default_border normal 0
@@ -66,7 +71,7 @@ for_window [window_role="pop-up"] floating enable
 
 bar {
     i3bar_command i3bar -t
-    status_command i3blocks -c ~/common/i3/i3blocks.conf
+    status_command i3blocks -c ~/.config/i3/i3blocks.conf
 
     tray_output primary
 
@@ -74,6 +79,8 @@ bar {
     # hidden_state hide
     # modifier $mod
 	position bottom
+
+	bindsym --release button3 exec jgmenu
 
 	colors{
         background $color_main
@@ -94,6 +101,21 @@ client.focused_inactive $color_main         $color_secondary    $color_text_main
 client.urgent           $color_attention    $color_attention    $color_text_main
 
 hide_edge_borders both
+
+# Don't treat Plasma pop-ups as full-sized windows
+for_window [class="plasmashell"] floating enable
+
+# Make system settings windows floating
+for_window [class="systemsettings"] floating enable
+
+# Make XFCE panels floating
+for_window [class="Xfce4-panel"] floating enable
+
+# Kill Plasma Desktop window
+for_window [title="Desktop — Plasma"] kill
+
+# Make calendar in i3blocks bar floating
+for_window [class="Yad"] floating enable
 
 # ***** Keybindings ************************************************************************************************************************************************************
 # reload the configuration file
@@ -128,13 +150,13 @@ bindsym $mod+BackSpace exec termite -e ranger
 bindsym $mod+Shift+q kill
 
 # start program launcher
-bindsym $mod+d exec ~/common/scripts/i3/launcher.sh
+bindsym $mod+d exec ~/scripts/i3/launcher.sh
 
 # start program switcher
-bindsym $alt+$tab exec ~/common/scripts/i3/switcher.sh
+# bindsym $alt+$tab exec ~/scripts/i3/switcher.sh
 
 # rofi calculator
-bindsym $mod+q exec ~/common/scripts/calc.sh
+bindsym $mod+q exec ~/scripts/calc.sh
 
 # change focus with direction keys
 bindsym $mod+$left focus left
@@ -178,7 +200,7 @@ bindsym $mod+a focus parent
 #bindsym $mod+d focus child
 
 # make current window sticky
-bindsym $mod+p sticky toggle
+bindsym $mod+p exec ~/scripts/i3-toggle-sticky.sh
 
 # switch to workspace
 bindsym $mod+1 workspace $work1
@@ -225,12 +247,12 @@ bindsym XF87AudioPrev exec playerctl previous
 bindsym XF87BrightnessUp exec termite
 
 # ***** Scratchpad Windows *****************************************************************************************************************************************************
-for_window [class="Sakura" title="Scratchpad Terminal"] floating enable
-for_window [class="Sakura" title="Scratchpad Terminal"] resize set 1280 720
-for_window [class="Sakura" title="Scratchpad Terminal"] move position center
-for_window [class="Sakura" title="Scratchpad Terminal"] move scratchpad
-exec --no-startup-id $term --title "Scratchpad Terminal" -e "zsh -c 'tmux attach -t scratch || tmux new -s scratch'"
-bindsym $mod+u [class="Sakura" title="Scratchpad Terminal"] scratchpad show; move position center
+for_window [title="Scratchpad Terminal"] floating enable
+for_window [title="Scratchpad Terminal"] resize set 1280 720
+for_window [title="Scratchpad Terminal"] move position center
+for_window [title="Scratchpad Terminal"] move scratchpad
+exec --no-startup-id $term -t "Scratchpad Terminal" -e tmux
+bindsym $mod+u [title="Scratchpad Terminal"] scratchpad show; move position center
 
 for_window [class="Pavucontrol"] floating enable
 for_window [class="Pavucontrol"] resize set 625 400
@@ -288,9 +310,7 @@ bindsym $mod+r mode "resize"
 set $mode_display display settings: (1) [Primary:eDP1] (2) [Primary:eDP1][Secondary:HDMI1] (3) [Primary:eDP1][Mirror:HDMI1]
 mode "$mode_display" {
     # Display mode switches
-    bindsym 1 exec ~/common/scripts/i3/displays/peDP1.sh && i3-msg reload
-    bindsym 2 exec ~/common/scripts/i3/displays/peDP1sHDMI2.sh && i3-msg reload
-    bindsym 3 exec ~/common/scripts/i3/displays/peDP1mHDMI2.sh && i3-msg reload
+    bindsym 1 exec ~/etc/display_scripts/default.sh
 
     # back to normal: Enter or Escape
     bindsym Return mode "default"
@@ -302,7 +322,7 @@ bindsym $mod+x mode "$mode_display"
 # Only run startup scripts once
 
 # Run primary display script
-exec ~/common/scripts/i3/displays/primary.sh
+exec /etc/display_scripts/default.sh
 
 #Startup Programs
 exec nm-applet
@@ -311,9 +331,10 @@ exec solaar
 exec remmina -i
 exec udiskie -t
 exec onboard
+exec dunst
 
 # ***** Config Scripts *********************************************************************************************************************************************************
 # Run config scripts on each reload
 
 # Set background
-exec_always feh --bg-scale ~/Pictures/desktop_background
+exec_always feh --bg-scale $HOME/.config/i3/background

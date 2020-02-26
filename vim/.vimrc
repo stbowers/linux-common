@@ -1,31 +1,25 @@
 " Vim settings
 
+" =====[ Mouse ]=====
 " Enable mouse
 set mouse=a
 
-" Enable cut and paste from x clipboard
-function! ClipboardYank()
-  call system('xclip -i -selection clipboard', @@)
-endfunction
-function! ClipboardPaste()
-  let @@ = system('xclip -o -selection clipboard')
-endfunction
-
-vnoremap <silent> y y:call ClipboardYank()<cr>
-vnoremap <silent> d d:call ClipboardYank()<cr>
-nnoremap <silent> p :call ClipboardPaste()<cr>p
+" =====[ Appearance ]=====
+" Color theme
+set background=dark
+color elflord
 
 " Enable syntax highlighting
 syntax on
 
 " Setup line numbers - relative numbering and colors
 set number
-:highlight LineNr term=NONE cterm=NONE ctermfg=Blue ctermbg=Grey
-:highlight CursorLineNr term=NONE cterm=NONE ctermfg=Red ctermbg=Grey
+:highlight LineNr term=NONE cterm=NONE ctermfg=Cyan ctermbg=None
+:highlight CursorLineNr term=NONE cterm=NONE ctermfg=Red ctermbg=None
 
 " Highlight current line
 set cursorline
-:highlight CursorLine term=NONE cterm=NONE ctermbg=Black
+:highlight CursorLine term=NONE cterm=Underline
 
 " Don't wrap lines
 set nowrap
@@ -33,24 +27,9 @@ set nowrap
 " Always display status line
 set laststatus=2
 
-" Set up status line
-
-" Color theme
-set t_Co=256
-set background=dark
-colorscheme elflord
-
-" Setup powerline fonts
-let g:airline_powerline_fonts=1
-
-" Setup correct tab behaviour
-" 1 tab = 4 spaces, always enter spaces when pressing the tab key
-set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
-
-" YouCompleteMe Settings
-" Set a golbal ycm_extra_conf file to fall back on if none is found in the
-" project directory
-let g:ycm_global_ycm_extra_conf = '~/.nvim/ycm_global_conf.py'
+" =====[ Buffers ]=====
+" Allow buffers to be hidden (i.e. background buffers can have unsaved changes)
+set hidden
 
 " =====[ Status Line ]=====
 
@@ -121,4 +100,46 @@ function! StatusLine()
 endfunction
 
 set statusline=%!StatusLine()
-" =====
+
+" =====[ Misc ]=====
+" Setup correct tab behaviour
+" 1 tab = 4 spaces, always enter spaces when pressing the tab key
+set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
+
+" Enable cut and paste from x clipboard
+function! ClipboardYank()
+  call system('xclip -i -selection clipboard', @@)
+endfunction
+function! ClipboardPaste()
+  let @@ = system('xclip -o -selection clipboard')
+endfunction
+
+vnoremap <silent> y y:call ClipboardYank()<cr>
+vnoremap <silent> d d:call ClipboardYank()<cr>
+nnoremap <silent> p :call ClipboardPaste()<cr>p
+
+" =====[ NERDTree ]=====
+" Settings
+let NERDTreeMinimalUI=1             " Clean UI
+
+" Automatically start NERDTree for directories
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
+
+" Map Ctrl+n to toggle NERDTree
+map <C-n> :NERDTreeToggle<CR>
+
+" Close vim if only NERDTree is left open
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" =====[ Tagbar ]=====
+" Map Ctrl+m to toggle tagbar
+map <C-m> :TagbarToggle<CR>
+
+" =====[ Rust ]=====
+" Format on save
+let g:rustfmt_autosave = 1
+
+" =====[ YouCompleteMe ]=====
+let g:ycm_use_clangd = 1
+nnoremap <F12> :YcmCompleter GoTo<CR>
