@@ -5,24 +5,24 @@ SAVEHIST=1000
 bindkey -v
 # End of lines configured by zsh-newuser-install
 # The following lines were added by compinstall
-zstyle :compinstall filename '/home/bowers/.zshrc'
+zstyle :compinstall filename '/home/sean/.zshrc'
 
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 
 # Add home bin dir to path
-export PATH=$PATH:~/bin:/opt/cross-sh/bin
+export PATH=$PATH:~/bin:~/.local/bin
 
 # Terminal is urxvt
-export TERM=rxvt-unicode-256color
+export TERM=xterm-256color
 
 # Set editor to nvim
-export VISUAL="open_nvim"
+export VISUAL="nvim"
 export EDITOR="$VISUAL"
 
 # Set prompt
-source ~/dotfiles/scripts/powerline-prompt.sh
+source ~/scripts/powerline-prompt.sh
 
 # Auto suggestions
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -33,15 +33,6 @@ alias ls="ls --color=auto"
 alias ll="ls -la"
 alias l.="ls -d .*"
 
-# python virtualenv
-export WORKON_HOME=~/.virtualenvs
-source /usr/bin/virtualenvwrapper.sh
-export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2.7
-export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv2
-
-# RVM
-source /home/bowers/.rvm/scripts/rvm
-
 # SSH agent (gpg)
 unset SSH_AGENT_PID
 if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
@@ -50,5 +41,11 @@ fi
 export GPG_TTY=$(tty)
 gpg-connect-agent updatestartuptty /bye >/dev/null
 
-# Attach to a tmux session (if there is none, one will be created)
-[[ -z $TMUX ]] && tmux attach
+# If we're on /dev/tty1, start an x session, otherwise start a tmux session
+if [ $TTY = "/dev/tty1" ]; then
+    startx
+else
+    # If we're not already in a TMUX session, attach to one.
+    # If there are no available TMUX sessions, one will be created
+    [[ -z $TMUX ]] && tmux attach
+fi
