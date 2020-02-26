@@ -3,27 +3,6 @@
 " Enable mouse
 set mouse=a
 
-" File and Window Management 
-inoremap <leader>w <Esc>:w<CR>
-nnoremap <leader>w :w<CR>
-
-inoremap <leader>q <ESC>:q<CR>
-nnoremap <leader>q :q<CR>
-
-inoremap <leader>x <ESC>:x<CR>
-nnoremap <leader>x :x<CR>
-
-nnoremap <leader>e :Ex<CR>
-nnoremap <leader>t :tabnew<CR>:Ex<CR>
-nnoremap <leader>v :vsplit<CR>:w<CR>:Ex<CR>
-nnoremap <leader>s :split<CR>:w<CR>:Ex<CR>
-
-" Tab Movement
-nnoremap <C-h> :tabprevious<CR>                                                                            
-nnoremap <C-l> :tabnext<CR>
-nnoremap <C-k> :tabm +1<CR>
-nnoremap <C-j> :tabm -1<CR>
-
 " Enable cut and paste from x clipboard
 function! ClipboardYank()
   call system('xclip -i -selection clipboard', @@)
@@ -41,7 +20,6 @@ syntax on
 
 " Setup line numbers - relative numbering and colors
 set number
-set relativenumber
 :highlight LineNr term=NONE cterm=NONE ctermfg=Blue ctermbg=Grey
 :highlight CursorLineNr term=NONE cterm=NONE ctermfg=Red ctermbg=Grey
 
@@ -57,10 +35,10 @@ set laststatus=2
 
 " Set up status line
 
-
 " Color theme
+set t_Co=256
 set background=dark
-color default
+colorscheme elflord
 
 " Setup powerline fonts
 let g:airline_powerline_fonts=1
@@ -73,49 +51,6 @@ set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
 " Set a golbal ycm_extra_conf file to fall back on if none is found in the
 " project directory
 let g:ycm_global_ycm_extra_conf = '~/.nvim/ycm_global_conf.py'
-
-" Neomake Settings
-
-" Rename file tabs to show tab number and open splits
-" (Based on http://stackoverflow.com/questions/5927952/whats-implementation-of-vims-default-tabline-function)
-if exists("+showtabline")
-    function! TabLine()
-        let tab_line = '%#TabLineFill#' . repeat(' ', &numberwidth)
-
-        let current_tab = 1
-        let active_tab = tabpagenr()
-        let total_tabs = tabpagenr('$')
-
-        while current_tab <= total_tabs
-            let tab = ''
-            if current_tab == active_tab
-                let tab .= '%#TabLineSel#'
-            else
-                let tab .= '%#TabLineFill#'
-            endif
-
-            let buflist = tabpagebuflist(current_tab)
-            let winnr = tabpagewinnr(current_tab)
-            let bufnr = buflist[winnr - 1]
-            let file = bufname(bufnr)
-            let bufmodified = getbufvar(bufnr, '&mod')
-
-            let tab .= printf('%d:%s%s', current_tab, (file == '' ? '[No Name]' : file), (bufmodified ? '*' : ''))
-            let tab .= printf(' %%%dX[X]%%X', current_tab)
-
-            let tab_line .= printf('%%%dT%s%%#TabLineSel#', current_tab, tab)
-
-            let current_tab += 1
-        endwhile
-
-        let tab_line .= '%T%#TabLineFill#%='
-        return tab_line
-    endfunction
-    set stal=2
-    set tabline=%!TabLine()
-    set showtabline=2
-    highlight link TabNum Special
-endif
 
 " =====[ Status Line ]=====
 

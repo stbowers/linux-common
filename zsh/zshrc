@@ -7,6 +7,8 @@ bindkey -v
 # The following lines were added by compinstall
 zstyle :compinstall filename '/home/bowers/.zshrc'
 
+fpath+=~/.zfunc
+
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
@@ -14,15 +16,14 @@ compinit
 # Add home bin dir to path
 export PATH=$PATH:~/bin:/opt/cross-sh/bin
 
-# Terminal is urxvt
-export TERM=rxvt-unicode-256color
+# Emulate 256 color xterm
+export TERM=xterm-256color
 
 # Set editor to nvim
 export VISUAL="open_nvim"
-export EDITOR="$VISUAL"
-
+export EDITOR="$VISUAL" 
 # Set prompt
-source ~/dotfiles/scripts/powerline-prompt.sh
+source ~/common/scripts/powerline-prompt.sh
 
 # Auto suggestions
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -39,16 +40,5 @@ source /usr/bin/virtualenvwrapper.sh
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2.7
 export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv2
 
-# RVM
-source /home/bowers/.rvm/scripts/rvm
-
-# SSH agent (gpg)
-unset SSH_AGENT_PID
-if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
-  export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
-fi
-export GPG_TTY=$(tty)
-gpg-connect-agent updatestartuptty /bye >/dev/null
-
 # Attach to a tmux session (if there is none, one will be created)
-[[ -z $TMUX ]] && tmux attach
+if [ -t 0 ] && [[ -z $TMUX ]]; then; tmux attach || tmux new; fi

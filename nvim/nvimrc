@@ -1,5 +1,5 @@
 " Load vim-plug
-source ~/dotfiles/nvim/plug.vim
+source ~/common/nvim/plug.vim
 
 " Load plugin directory
 call plug#begin('~/.nvim/user-plugins')
@@ -12,10 +12,12 @@ Plug 'Valloric/YouCompleteMe'
 Plug 'neomake/neomake'
 Plug 'sakhnik/nvim-gdb'
 Plug 'triglav/vim-visual-increment'
+Plug 'rust-lang/rust.vim'
+Plug 'preservim/nerdtree'
 
 " Initialize plugin system
 call plug#end()
 
 " load vim settings
-source ~/dotfiles/vim/vimrc
+source ~/common/vim/vimrc
 
