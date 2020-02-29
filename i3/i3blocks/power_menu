@@ -4,6 +4,6 @@ echo "$LABEL"
 
 case "$BLOCK_BUTTON" in
     1|2|3)
-        ~/scripts/i3-system-power-menu.sh
+        ~/scripts/i3/power-menu.sh
 esac
 
