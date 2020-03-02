@@ -1,0 +1,4 @@
+stay_alive = 0
+position_mode = pointer
+font = System San Francisco 20
+icon_theme=breeze-dark
