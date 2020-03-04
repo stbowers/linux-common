@@ -14,7 +14,7 @@ compinit
 # End of lines added by compinstall
 
 # Add home bin dir to path
-export PATH=$PATH:~/bin:~/.local/bin
+export PATH=$PATH:~/bin:~/.local/bin:~/.cargo/bin
 
 # Emulate 256 color xterm
 export TERM=xterm-256color

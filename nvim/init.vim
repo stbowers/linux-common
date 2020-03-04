@@ -18,7 +18,8 @@ Plug 'rust-lang/rust.vim'
 
 Plug 'majutsushi/tagbar'
 Plug 'vim-syntastic/syntastic'
-Plug 'ycm-core/YouCompleteMe'
+" Plug 'ycm-core/YouCompleteMe'
+Plug 'neoclide/coc.nvim'
 
 Plug 'sakhnik/nvim-gdb'
 
